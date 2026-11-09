@@ -9,6 +9,7 @@
     --pink: #f9a8d4;
     --on-pink: #4a2c3a;
     --line: #f9cfe0;
+    --icon-filter: none;
 }
 
 [data-theme="dark"]{
@@ -20,6 +21,7 @@
     --pink: #f9a8d4;
     --on-pink: #2a1530;
     --line: #3d3154;
+    --icon-filter: brightness(1.6); 
 }
 
 @theme inline {
@@ -32,6 +34,7 @@
   --color-on-pink: var(--on-pink);
   --color-line: var(--line);
   --font-sans: "Quicksand", system-ui, sans-serif;
+   
 }
 
 body{
@@ -39,4 +42,9 @@ body{
     background: var(--page);
     color:var(--ink);
     font-family: var(--font-sans);
+}
+
+
+.icon {
+  filter: var(--icon-filter);
 }

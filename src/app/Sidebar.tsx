@@ -9,7 +9,7 @@ type SidebarProps = {
 export function Sidebar({ current, onSelect }: SidebarProps) {
   return (
     <nav className="flex w-56 shrink-0 flex-col gap-1 border-r border-line bg-card p-4">
-      <h1 className="mb-4 px-3 text-xl font-bold">Jibon Guchao 🎀</h1>
+      <h1 className="mb-4 px-3 text-xl font-bold">Jibon Guchao </h1>
 
       {SCREENS.map((screen) => {
         const isActive = screen.id === current;
@@ -25,7 +25,7 @@ export function Sidebar({ current, onSelect }: SidebarProps) {
                 : "text-ink-soft hover:bg-card-soft hover:text-ink"
             }`}
           >
-            <span aria-hidden="true">{screen.emoji}</span>
+            <img src={screen.icon} alt="" className="icon h-6 w-6" />
             {screen.label}
           </button>
         );
