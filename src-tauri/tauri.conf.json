@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "jibon-guchao",
-        "width": 800,
-        "height": 600
+        "title": "Jibon Guchao",
+        "width": 1100,
+        "height": 7200
       }
     ],
     "security": {
