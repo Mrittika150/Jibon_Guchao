@@ -1,0 +1,39 @@
+import { SCREENS, type ScreenId } from "./screens";
+import { ThemeToggle } from "../components/ThemeToggle";
+
+type SidebarProps = {
+  current: ScreenId;
+  onSelect: (id: ScreenId) => void;
+};
+
+export function Sidebar({ current, onSelect }: SidebarProps) {
+  return (
+    <nav className="flex w-56 shrink-0 flex-col gap-1 border-r border-line bg-card p-4">
+      <h1 className="mb-4 px-3 text-xl font-bold">Jibon Guchao 🎀</h1>
+
+      {SCREENS.map((screen) => {
+        const isActive = screen.id === current;
+        return (
+          <button
+            key={screen.id}
+            type="button"
+            onClick={() => onSelect(screen.id)}
+            aria-current={isActive ? "page" : undefined}
+            className={`flex items-center gap-3 rounded-2xl px-3 py-2 text-left font-semibold transition-colors ${
+              isActive
+                ? "bg-pink text-on-pink"
+                : "text-ink-soft hover:bg-card-soft hover:text-ink"
+            }`}
+          >
+            <span aria-hidden="true">{screen.emoji}</span>
+            {screen.label}
+          </button>
+        );
+      })}
+
+      <div className="mt-auto">
+        <ThemeToggle />
+      </div>
+    </nav>
+  );
+}

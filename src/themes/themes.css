@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+:root{
+    --page: #fff5f8;
+    --card: #ffffff;
+    --card-soft: #ffe4ee;
+    --ink: #4a2c3a;
+    --ink-soft: #8a5f72;
+    --pink: #f9a8d4;
+    --on-pink: #4a2c3a;
+    --line: #f9cfe0;
+}
+
+[data-theme="dark"]{
+    --page: #1c1626;
+    --card:#271f35;
+    --card-soft: #33284a;
+    --ink: #f7e8f0;
+    --ink-soft: #b9a3c4;
+    --pink: #f9a8d4;
+    --on-pink: #2a1530;
+    --line: #3d3154;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-card-soft: var(--card-soft);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-pink: var(--pink);
+  --color-on-pink: var(--on-pink);
+  --color-line: var(--line);
+  --font-sans: "Quicksand", system-ui, sans-serif;
+}
+
+body{
+    margin:0;
+    background: var(--page);
+    color:var(--ink);
+    font-family: var(--font-sans);
+}
