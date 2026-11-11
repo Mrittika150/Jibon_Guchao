@@ -35,7 +35,7 @@ export function HealthPage() {
   const exerciseDays = new Set((range.data?.exerciseLogs ?? []).map((log) => log.log_date)).size;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div role="group" aria-label="Time period" className="flex gap-2">
         {PERIODS.map((period) => (
           <button
@@ -43,7 +43,7 @@ export function HealthPage() {
             type="button"
             onClick={() => setDays(period)}
             aria-pressed={days === period}
-            className={`rounded-2xl px-4 py-2 font-semibold ${
+            className={`rounded-2xl px-4 py-1.5 font-semibold ${
               days === period ? "bg-pink text-on-pink" : "bg-card hover:bg-card-soft"
             }`}
           >
@@ -61,7 +61,7 @@ export function HealthPage() {
 
       {range.isSuccess && (
         <>
-          <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <StatTile label="Average steps" value={averageSteps?.toLocaleString() ?? "-"} detail={`on ${loggedSteps.length} logged days`} />
             <StatTile label="Step goal reached" value={`${goalDays} days`} detail={`goal: ${stepGoal.toLocaleString()}`} />
             <StatTile
@@ -72,7 +72,7 @@ export function HealthPage() {
             <StatTile label="Exercise days" value={`${exerciseDays} / ${days}`} />
           </div>
 
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <ChartCard title="Steps" subtitle={`Daily steps, last ${days} days`} unit="steps" rows={stepRows}>
               <StepsChart rows={stepRows} goal={stepGoal} />
             </ChartCard>

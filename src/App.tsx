@@ -4,15 +4,22 @@ import { SCREENS, type ScreenId } from "./app/screens";
 import { useSession } from "./auth/useSession";
 import { LoginScreen } from "./auth/LoginScreen";
 import { TodayPage } from "./features/today/TodayPage";
+import { todayISO } from "./lib/dates";
 import { CalendarPage } from "./features/calendar/CalendarPage";
 import { HealthPage } from "./features/health/HealthPage";
 
-function ScreenContent({ id }: { id: ScreenId }) {
+type ScreenContentProps = {
+  id: ScreenId;
+  day: string;
+  onOpenDay: (date: string) => void;
+};
+
+function ScreenContent({ id, day, onOpenDay }: ScreenContentProps) {
   switch (id) {
     case "today":
-      return <TodayPage />;
+      return <TodayPage date={day} onChangeDate={onOpenDay} />;
     case "calendar":
-      return <CalendarPage />;
+      return <CalendarPage onOpenDay={onOpenDay} />;
     case "health":
       return <HealthPage />;
     default:
@@ -26,6 +33,8 @@ function ScreenContent({ id }: { id: ScreenId }) {
 
 function App() {
   const [current, setCurrent] = useState<ScreenId>("today");
+  // null means "whatever today is", so it stays right after midnight
+  const [day, setDay] = useState<string | null>(null);
   const screen = SCREENS.find((s) => s.id === current) ?? SCREENS[0];
     const session = useSession();
 
@@ -36,17 +45,27 @@ function App() {
     return <LoginScreen />;
   }
 
+  function openDay(date: string) {
+    setDay(date === todayISO() ? null : date);
+    setCurrent("today");
+  }
+
+  function selectScreen(id: ScreenId) {
+    if (id === "today") setDay(null); // the sidebar's Today always means today
+    setCurrent(id);
+  }
+
   return (
     <div className="flex h-screen">
-      <Sidebar current={current} onSelect={setCurrent} />
+      <Sidebar current={current} onSelect={selectScreen} />
 
-      <main className="flex-1 overflow-y-auto p-8">
-       <h2 className="flex items-center gap-3 text-3xl font-bold">
-        <img src={screen.icon} alt="" className="icon h-10 w-10" />
+      <main className="flex-1 overflow-y-auto p-6">
+       <h2 className="flex items-center gap-3 text-2xl font-bold">
+        <img src={screen.icon} alt="" className="icon h-8 w-8" />
         {screen.label}
       </h2>
-                <div className="mt-6">
-         <ScreenContent id={current} />
+                <div className="mt-4">
+         <ScreenContent id={current} day={day ?? todayISO()} onOpenDay={openDay} />
         </div>
       </main>
     </div>

@@ -21,7 +21,7 @@ export function TodosCard({ date }: { date: string }) {
       {todos.isPending && <p className="text-ink-soft">Loading...</p>}
       {todos.data?.length === 0 && <p className="text-ink-soft">Nothing to do. Enjoy your day.</p>}
 
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-1">
         {todos.data?.map((todo) => (
           <li key={todo.id} className="flex items-center gap-3 rounded-2xl px-2 py-1 hover:bg-card-soft">
             <input
@@ -55,12 +55,12 @@ export function TodosCard({ date }: { date: string }) {
           maxLength={200}
           placeholder="New to-do"
           aria-label="New to-do"
-          className="w-full min-w-0 rounded-2xl border border-line bg-page px-3 py-2"
+          className="w-full min-w-0 rounded-2xl border border-line bg-page px-3 py-1.5"
         />
         <button
           type="submit"
           disabled={addTodo.isPending}
-          className="rounded-2xl bg-card-soft px-4 py-2 font-bold disabled:opacity-60"
+          className="rounded-2xl bg-card-soft px-3 py-1.5 font-bold disabled:opacity-60"
         >
           Add
         </button>

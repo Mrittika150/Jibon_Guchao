@@ -15,7 +15,7 @@ export function WaterCard({ saved, goal, saving, onSave }: WaterCardProps) {
 
   return (
     <Card title="Water">
-      <p className="text-3xl font-bold">
+      <p className="text-2xl font-bold">
         {current} <span className="text-base font-semibold text-ink-soft">ml</span>
       </p>
       <ProgressBar value={current} goal={goal} label="Water progress" />
@@ -26,17 +26,18 @@ export function WaterCard({ saved, goal, saving, onSave }: WaterCardProps) {
           type="button"
           disabled={saving || current === 0}
           onClick={() => onSave(Math.max(0, current - GLASS_ML))}
-          className="rounded-2xl bg-card-soft px-4 py-2 font-bold disabled:opacity-60"
+          aria-label="Remove 1 glass"
+          className="rounded-2xl bg-card-soft px-3 py-1.5 font-bold disabled:opacity-60"
         >
-          - 1 glass
+          -
         </button>
         <button
           type="button"
           disabled={saving}
           onClick={() => onSave(current + GLASS_ML)}
-          className="flex-1 rounded-2xl bg-pink px-4 py-2 font-bold text-on-pink disabled:opacity-60"
+          className="flex-1 rounded-2xl bg-pink px-3 py-1.5 font-bold text-on-pink disabled:opacity-60"
         >
-          + 1 glass ({GLASS_ML} ml)
+          + 1 glass
         </button>
       </div>
     </Card>

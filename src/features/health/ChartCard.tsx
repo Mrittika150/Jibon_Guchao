@@ -14,16 +14,16 @@ export function ChartCard({ title, subtitle, unit, rows, children }: ChartCardPr
   const filled = rows.filter((row) => row.value !== null);
 
   return (
-    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-card p-6 shadow-sm">
+    <section className="flex flex-col gap-3 rounded-3xl border border-line bg-card p-4 shadow-sm">
       <div>
-        <h3 className="text-lg font-bold">{title}</h3>
+        <h3 className="text-base font-bold">{title}</h3>
         <p className="text-sm text-ink-soft">{subtitle}</p>
       </div>
 
       {filled.length === 0 ? (
-        <p className="py-12 text-center text-ink-soft">Nothing logged in this period yet.</p>
+        <p className="py-10 text-center text-ink-soft">Nothing logged in this period yet.</p>
       ) : (
-        <figure aria-label={`${title} chart`} className="h-64 w-full">
+        <figure aria-label={`${title} chart`} className="h-48 w-full">
           {children}
         </figure>
       )}

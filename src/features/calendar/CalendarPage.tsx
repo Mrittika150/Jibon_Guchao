@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { formatMonth, monthGrid, todayISO, weekdayOf } from "../../lib/dates";
+import { formatLongDate, formatMonth, monthGrid, toISODate, todayISO, weekdayOf } from "../../lib/dates";
 import { groupByDate, useRangeData } from "../../lib/rangeData";
 import { useSettings } from "../today/api";
-import { TodayPage } from "../today/TodayPage";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export function CalendarPage() {
+type CalendarPageProps = {
+  onOpenDay: (date: string) => void;
+};
+
+export function CalendarPage({ onOpenDay }: CalendarPageProps) {
   const today = todayISO();
   const [year, setYear] = useState(() => new Date().getFullYear());
   const [month, setMonth] = useState(() => new Date().getMonth());
@@ -22,32 +25,41 @@ export function CalendarPage() {
   const stepGoal = settings.data?.step_goal ?? 10000;
   const daysOff = settings.data?.days_off ?? [];
 
-  function changeMonth(by: number) {
-    const next = new Date(year, month + by, 1);
+  function showMonth(next: Date) {
     setYear(next.getFullYear());
     setMonth(next.getMonth());
   }
 
+  function changeMonth(by: number) {
+    const next = new Date(year, month + by, 1);
+    showMonth(next);
+    // Select the 1st of the new month, so the side panel shows a day you can see
+    setSelected(toISODate(next));
+  }
+
   function goToToday() {
-    const now = new Date();
-    setYear(now.getFullYear());
-    setMonth(now.getMonth());
+    showMonth(new Date());
     setSelected(today);
   }
 
+  // What happened on the selected day, for the side panel
+  const selectedLog = logsByDate.get(selected)?.[0];
+  const selectedTodos = todosByDate.get(selected) ?? [];
+  const selectedExercises = exercisesByDate.get(selected)?.length ?? 0;
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <button type="button" onClick={() => changeMonth(-1)} className="rounded-2xl bg-card px-4 py-2 font-semibold hover:bg-card-soft">
+        <button type="button" onClick={() => changeMonth(-1)} className="rounded-2xl bg-card px-3 py-1.5 font-semibold hover:bg-card-soft">
           Previous
         </button>
-        <h3 className="min-w-48 text-center text-xl font-bold" aria-live="polite">
+        <h3 className="min-w-44 text-center text-lg font-bold" aria-live="polite">
           {formatMonth(year, month)}
         </h3>
-        <button type="button" onClick={() => changeMonth(1)} className="rounded-2xl bg-card px-4 py-2 font-semibold hover:bg-card-soft">
+        <button type="button" onClick={() => changeMonth(1)} className="rounded-2xl bg-card px-3 py-1.5 font-semibold hover:bg-card-soft">
           Next
         </button>
-        <button type="button" onClick={goToToday} className="ml-auto rounded-2xl bg-pink px-4 py-2 font-bold text-on-pink">
+        <button type="button" onClick={goToToday} className="ml-auto rounded-2xl bg-pink px-3 py-1.5 font-bold text-on-pink">
           Today
         </button>
       </div>
@@ -58,66 +70,85 @@ export function CalendarPage() {
         </p>
       )}
 
-      <div className="rounded-3xl border border-line bg-card p-4 shadow-sm">
-        <div className="grid grid-cols-7 gap-1">
-          {WEEKDAYS.map((name) => (
-            <div key={name} className="px-2 pb-2 text-sm font-semibold text-ink-soft">
-              {name}
-            </div>
-          ))}
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
+        <div className="rounded-3xl border border-line bg-card p-3 shadow-sm">
+          <div className="grid grid-cols-7 gap-1">
+            {WEEKDAYS.map((name) => (
+              <div key={name} className="px-1.5 pb-1 text-xs font-semibold text-ink-soft">
+                {name}
+              </div>
+            ))}
 
-          {days.map((date) => {
-            const inMonth = Number(date.slice(5, 7)) === month + 1;
-            const log = logsByDate.get(date)?.[0];
-            const exercisesDone = exercisesByDate.get(date)?.length ?? 0;
-            const todos = todosByDate.get(date) ?? [];
-            const todosDone = todos.filter((todo) => todo.done).length;
-            const metStepGoal = (log?.steps ?? 0) >= stepGoal;
-            const isDayOff = daysOff.includes(weekdayOf(date));
-            const isSelected = date === selected;
-            const isToday = date === today;
+            {days.map((date) => {
+              const inMonth = Number(date.slice(5, 7)) === month + 1;
+              const log = logsByDate.get(date)?.[0];
+              const metStepGoal = (log?.steps ?? 0) >= stepGoal;
+              const isDayOff = daysOff.includes(weekdayOf(date));
+              const isSelected = date === selected;
+              const isToday = date === today;
 
-            return (
-              <button
-                key={date}
-                type="button"
-                onClick={() => setSelected(date)}
-                aria-pressed={isSelected}
-                aria-label={date}
-                className={`flex min-h-24 flex-col items-start gap-1 rounded-2xl border p-2 text-left text-xs transition-colors ${
-                  isSelected ? "border-pink bg-card-soft" : "border-transparent hover:bg-card-soft"
-                } ${isDayOff && !isSelected ? "bg-page" : ""} ${inMonth ? "" : "opacity-40"}`}
-              >
-                <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold ${
-                    isToday ? "bg-pink text-on-pink" : ""
-                  }`}
+              return (
+                <button
+                  key={date}
+                  type="button"
+                  onClick={() => setSelected(date)}
+                  onDoubleClick={() => onOpenDay(date)}
+                  aria-pressed={isSelected}
+                  aria-label={formatLongDate(date)}
+                  className={`flex h-16 flex-col items-start gap-0.5 rounded-xl border p-1.5 text-left text-xs transition-colors ${
+                    isSelected ? "border-pink bg-card-soft" : "border-transparent hover:bg-card-soft"
+                  } ${isDayOff && !isSelected ? "bg-page" : ""} ${inMonth ? "" : "opacity-40"}`}
                 >
-                  {Number(date.slice(8, 10))}
-                </span>
-                {log?.steps != null && (
-                  <span className={metStepGoal ? "font-bold" : "text-ink-soft"}>
-                    {(log.steps / 1000).toFixed(1)}k steps
+                  <span
+                    className={`flex h-6 w-6 items-center justify-center rounded-full font-bold ${
+                      isToday ? "bg-pink text-on-pink" : ""
+                    }`}
+                  >
+                    {Number(date.slice(8, 10))}
                   </span>
-                )}
-                {exercisesDone > 0 && <span className="text-ink-soft">{exercisesDone} {exercisesDone === 1 ? "exercise" : "exercises"}</span>}
-                {todos.length > 0 && (
-                  <span className="text-ink-soft">
-                    {todosDone}/{todos.length} to-dos
-                  </span>
-                )}
-                {log?.is_fast_day && <span className="rounded-full bg-pink px-2 font-semibold text-on-pink">Fast</span>}
-              </button>
-            );
-          })}
+                  {log?.steps != null && (
+                    <span className={metStepGoal ? "font-bold" : "text-ink-soft"}>
+                      {(log.steps / 1000).toFixed(1)}k
+                    </span>
+                  )}
+                  {log?.is_fast_day && <span className="h-1.5 w-6 rounded-full bg-pink" />}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-2 px-1.5 text-xs text-ink-soft">
+            Steps in thousands, bold = goal reached. Pink line = fast day. Shaded = day off.
+          </p>
         </div>
-        <p className="mt-3 text-xs text-ink-soft">
-          Bold steps = goal reached. Shaded days are your days off.
-        </p>
-      </div>
 
-      <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">
-        <TodayPage date={selected} />
+        <aside className="flex flex-col gap-3 rounded-3xl border border-line bg-card p-4 shadow-sm">
+          <h3 className="font-bold">{formatLongDate(selected)}</h3>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+            <dt className="text-ink-soft">Steps</dt>
+            <dd className="text-right font-semibold">{selectedLog?.steps?.toLocaleString() ?? "-"}</dd>
+            <dt className="text-ink-soft">Water</dt>
+            <dd className="text-right font-semibold">{selectedLog?.water_ml != null ? `${selectedLog.water_ml} ml` : "-"}</dd>
+            <dt className="text-ink-soft">Walk</dt>
+            <dd className="text-right font-semibold">{selectedLog?.walk_minutes != null ? `${selectedLog.walk_minutes} min` : "-"}</dd>
+            <dt className="text-ink-soft">Weight</dt>
+            <dd className="text-right font-semibold">{selectedLog?.weight_kg != null ? `${selectedLog.weight_kg} kg` : "-"}</dd>
+            <dt className="text-ink-soft">Exercises</dt>
+            <dd className="text-right font-semibold">{selectedExercises} done</dd>
+            <dt className="text-ink-soft">To-dos</dt>
+            <dd className="text-right font-semibold">
+              {selectedTodos.filter((todo) => todo.done).length} / {selectedTodos.length}
+            </dd>
+            <dt className="text-ink-soft">Fast day</dt>
+            <dd className="text-right font-semibold">{selectedLog?.is_fast_day ? "Yes" : "No"}</dd>
+          </dl>
+          <button
+            type="button"
+            onClick={() => onOpenDay(selected)}
+            className="rounded-2xl bg-pink px-3 py-1.5 font-bold text-on-pink"
+          >
+            Open this day
+          </button>
+        </aside>
       </div>
     </div>
   );

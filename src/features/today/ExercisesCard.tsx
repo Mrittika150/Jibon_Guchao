@@ -25,7 +25,7 @@ export function ExercisesCard({ date }: { date: string }) {
         <p className="text-ink-soft">No exercises yet. Add your first one below.</p>
       )}
 
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-1">
         {exercises.data?.map((exercise) => {
           const done = doneIds.has(exercise.id);
           return (
@@ -51,12 +51,12 @@ export function ExercisesCard({ date }: { date: string }) {
           maxLength={100}
           placeholder="New exercise"
           aria-label="New exercise name"
-          className="w-full min-w-0 rounded-2xl border border-line bg-page px-3 py-2"
+          className="w-full min-w-0 rounded-2xl border border-line bg-page px-3 py-1.5"
         />
         <button
           type="submit"
           disabled={addExercise.isPending}
-          className="rounded-2xl bg-card-soft px-4 py-2 font-bold disabled:opacity-60"
+          className="rounded-2xl bg-card-soft px-3 py-1.5 font-bold disabled:opacity-60"
         >
           Add
         </button>
