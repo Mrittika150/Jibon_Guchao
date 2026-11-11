@@ -1,5 +1,6 @@
 import { SCREENS, type ScreenId } from "./screens";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { supabase } from "../lib/supabase";
 
 type SidebarProps = {
   current: ScreenId;
@@ -31,8 +32,15 @@ export function Sidebar({ current, onSelect }: SidebarProps) {
         );
       })}
 
-      <div className="mt-auto">
+     <div className="mt-auto flex flex-col gap-2">
         <ThemeToggle />
+        <button
+          type="button"
+          onClick={() => supabase.auth.signOut()}
+          className="rounded-2xl px-3 py-2 font-semibold text-ink-soft transition-colors hover:bg-card-soft hover:text-ink"
+        >
+          Sign out
+        </button>
       </div>
     </nav>
   );
