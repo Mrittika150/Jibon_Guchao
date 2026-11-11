@@ -3,6 +3,7 @@ import { Sidebar } from "./app/Sidebar";
 import { SCREENS, type ScreenId } from "./app/screens";
 import { useSession } from "./auth/useSession";
 import { LoginScreen } from "./auth/LoginScreen";
+import { TodayPage } from "./features/today/TodayPage";
 
 function App() {
   const [current, setCurrent] = useState<ScreenId>("today");
@@ -25,8 +26,14 @@ function App() {
         <img src={screen.icon} alt="" className="icon h-10 w-10" />
         {screen.label}
       </h2>
-        <div className="mt-6 rounded-3xl border border-line bg-card p-6 shadow-sm">
-          <p className="text-ink-soft">This screen is coming soon </p>
+                <div className="mt-6">
+          {current === "today" ? (
+            <TodayPage />
+          ) : (
+            <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">
+              <p className="text-ink-soft">This screen is coming soon</p>
+            </div>
+          )}
         </div>
       </main>
     </div>
