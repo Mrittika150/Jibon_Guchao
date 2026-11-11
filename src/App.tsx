@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { Sidebar } from "./app/Sidebar";
 import { SCREENS, type ScreenId } from "./app/screens";
+import { useSession } from "./auth/useSession";
+import { LoginScreen } from "./auth/LoginScreen";
 
 function App() {
   const [current, setCurrent] = useState<ScreenId>("today");
   const screen = SCREENS.find((s) => s.id === current) ?? SCREENS[0];
+    const session = useSession();
+
+  if (session === undefined) {
+    return null;
+  }
+  if (session === null) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="flex h-screen">
