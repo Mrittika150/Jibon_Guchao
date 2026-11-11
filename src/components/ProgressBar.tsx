@@ -14,7 +14,7 @@ export function ProgressBar({ value, goal, label }: ProgressBarProps) {
       aria-valuemin={0}
       aria-valuemax={goal}
       aria-valuenow={value}
-      className="h-3 w-full overflow-hidden rounded-full bg-card-soft"
+      className="h-2 w-full overflow-hidden rounded-full bg-card-soft"
     >
       <div className="h-full rounded-full bg-pink transition-all" style={{ width: `${percent}%` }} />
     </div>

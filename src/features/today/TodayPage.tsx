@@ -1,12 +1,16 @@
-import { formatLongDate, todayISO, weekdayOf } from "../../lib/dates";
+import { addDays, formatLongDate, todayISO, weekdayOf } from "../../lib/dates";
 import { useDailyLog, useSaveDailyLog, useSettings } from "./api";
 import { NumberCard } from "./NumberCard";
 import { WaterCard } from "./WaterCard";
 import { ExercisesCard } from "./ExercisesCard";
 import { TodosCard } from "./TodosCard";
 
-export function TodayPage() {
-  const date = todayISO();
+type TodayPageProps = {
+  date: string;
+  onChangeDate: (date: string) => void;
+};
+
+export function TodayPage({ date, onChangeDate }: TodayPageProps) {
   const settings = useSettings();
   const log = useDailyLog(date);
   const save = useSaveDailyLog(date);
@@ -28,10 +32,35 @@ export function TodayPage() {
   const isFastDay = today?.is_fast_day ?? false;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-lg text-ink-soft">{formatLongDate(date)}</p>
-        <label className="flex cursor-pointer items-center gap-2 rounded-2xl bg-card px-4 py-2 font-semibold">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onChangeDate(addDays(date, -1))}
+          className="rounded-2xl bg-card px-3 py-1.5 font-semibold hover:bg-card-soft"
+        >
+          Previous day
+        </button>
+        <p className="min-w-52 text-center text-lg font-semibold" aria-live="polite">
+          {formatLongDate(date)}
+        </p>
+        <button
+          type="button"
+          onClick={() => onChangeDate(addDays(date, 1))}
+          className="rounded-2xl bg-card px-3 py-1.5 font-semibold hover:bg-card-soft"
+        >
+          Next day
+        </button>
+        {date !== todayISO() && (
+          <button
+            type="button"
+            onClick={() => onChangeDate(todayISO())}
+            className="rounded-2xl bg-pink px-3 py-1.5 font-bold text-on-pink"
+          >
+            Back to today
+          </button>
+        )}
+        <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-2xl bg-card px-3 py-1.5 font-semibold">
           <input
             type="checkbox"
             checked={isFastDay}
@@ -41,7 +70,7 @@ export function TodayPage() {
           />
           Fast day
           {isScheduledFast && !isFastDay && (
-            <span className="text-sm font-normal text-ink-soft">(scheduled today)</span>
+            <span className="text-sm font-normal text-ink-soft">(scheduled)</span>
           )}
         </label>
       </div>
@@ -52,7 +81,7 @@ export function TodayPage() {
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <NumberCard
           title="Steps"
           icon="/assets/person.png"

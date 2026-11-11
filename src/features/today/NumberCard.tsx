@@ -22,7 +22,7 @@ export function NumberCard({ title, icon, unit, saved, goal, step = 1, saving, o
 
   return (
     <Card title={title} icon={icon}>
-      <p className="text-3xl font-bold">
+      <p className="text-2xl font-bold">
         {saved ?? "-"} <span className="text-base font-semibold text-ink-soft">{unit}</span>
       </p>
 
@@ -43,12 +43,12 @@ export function NumberCard({ title, icon, unit, saved, goal, step = 1, saving, o
           step={step}
           defaultValue={saved ?? ""}
           aria-label={`${title} in ${unit}`}
-          className="w-full min-w-0 rounded-2xl border border-line bg-page px-3 py-2"
+          className="w-full min-w-0 rounded-2xl border border-line bg-page px-3 py-1.5"
         />
         <button
           type="submit"
           disabled={saving}
-          className="rounded-2xl bg-pink px-4 py-2 font-bold text-on-pink disabled:opacity-60"
+          className="rounded-2xl bg-pink px-3 py-1.5 font-bold text-on-pink disabled:opacity-60"
         >
           {saving ? "Saving" : "Save"}
         </button>
