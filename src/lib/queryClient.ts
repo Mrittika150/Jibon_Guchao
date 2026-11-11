@@ -1,9 +1,14 @@
-import { QueryClient } from "@tanstack/react-query";
+import { MutationCache, QueryClient } from "@tanstack/react-query";
 
-export const queryClient = new QueryClient({
+export const queryClient: QueryClient = new QueryClient({
+  // After ANY successful save, refresh every query on screen,
+  // so Today, Calendar and Health always agree.
+  mutationCache: new MutationCache({
+    onSuccess: () => queryClient.invalidateQueries(),
+  }),
   defaultOptions: {
     queries: {
-      staleTime: 30_000, // data counts as fresh for 30 seconds
+      staleTime: 30_000, 
     },
   },
 });

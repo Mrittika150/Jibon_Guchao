@@ -10,6 +10,7 @@
     --on-pink: #4a2c3a;
     --line: #f9cfe0;
     --icon-filter: none;
+    --chart: #c2477e;
 }
 
 [data-theme="dark"]{
@@ -21,7 +22,9 @@
     --pink: #f9a8d4;
     --on-pink: #2a1530;
     --line: #3d3154;
-    --icon-filter: brightness(1.6); 
+    --icon-filter: brightness(1.6);
+    --chart: #e0609f;
+
 }
 
 @theme inline {
@@ -34,6 +37,7 @@
   --color-on-pink: var(--on-pink);
   --color-line: var(--line);
   --font-sans: "Quicksand", system-ui, sans-serif;
+  --color-chart: var(--chart);
    
 }
 

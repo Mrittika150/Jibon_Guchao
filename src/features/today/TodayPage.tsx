@@ -5,8 +5,7 @@ import { WaterCard } from "./WaterCard";
 import { ExercisesCard } from "./ExercisesCard";
 import { TodosCard } from "./TodosCard";
 
-export function TodayPage() {
-  const date = todayISO();
+export function TodayPage({ date = todayISO() }: { date?: string }) {
   const settings = useSettings();
   const log = useDailyLog(date);
   const save = useSaveDailyLog(date);

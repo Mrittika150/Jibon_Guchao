@@ -4,6 +4,25 @@ import { SCREENS, type ScreenId } from "./app/screens";
 import { useSession } from "./auth/useSession";
 import { LoginScreen } from "./auth/LoginScreen";
 import { TodayPage } from "./features/today/TodayPage";
+import { CalendarPage } from "./features/calendar/CalendarPage";
+import { HealthPage } from "./features/health/HealthPage";
+
+function ScreenContent({ id }: { id: ScreenId }) {
+  switch (id) {
+    case "today":
+      return <TodayPage />;
+    case "calendar":
+      return <CalendarPage />;
+    case "health":
+      return <HealthPage />;
+    default:
+      return (
+        <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">
+          <p className="text-ink-soft">This screen is coming soon</p>
+        </div>
+      );
+  }
+}
 
 function App() {
   const [current, setCurrent] = useState<ScreenId>("today");
@@ -27,13 +46,7 @@ function App() {
         {screen.label}
       </h2>
                 <div className="mt-6">
-          {current === "today" ? (
-            <TodayPage />
-          ) : (
-            <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">
-              <p className="text-ink-soft">This screen is coming soon</p>
-            </div>
-          )}
+         <ScreenContent id={current} />
         </div>
       </main>
     </div>
