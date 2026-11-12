@@ -1,6 +1,7 @@
 import { SCREENS, type ScreenId } from "./screens";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { supabase } from "../lib/supabase";
+import { toggleWidget } from "../widget/widgetWindow";
 
 type SidebarProps = {
   current: ScreenId;
@@ -33,6 +34,13 @@ export function Sidebar({ current, onSelect }: SidebarProps) {
       })}
 
      <div className="mt-auto flex flex-col gap-2">
+              <button
+          type="button"
+          onClick={() => toggleWidget()}
+          className="rounded-2xl px-3 py-2 font-semibold text-ink-soft transition-colors hover:bg-card-soft hover:text-ink"
+        >
+          Show / hide widget
+        </button>
         <ThemeToggle />
         <button
           type="button"
