@@ -5,6 +5,7 @@ import { useSettings } from "../today/api";
 import { ChartCard } from "./ChartCard";
 import { StatTile } from "./StatTile";
 import { StepsChart, WeightChart, type ChartRow } from "./charts";
+import { ExportButtons } from "./ExportButtons";
 
 const PERIODS = [7, 30, 90] as const;
 type Period = (typeof PERIODS)[number];
@@ -34,22 +35,25 @@ export function HealthPage() {
   const weightChange = weights.length >= 2 ? weights[weights.length - 1] - weights[0] : null;
   const exerciseDays = new Set((range.data?.exerciseLogs ?? []).map((log) => log.log_date)).size;
 
-  return (
+   return (
     <div className="flex flex-col gap-4">
-      <div role="group" aria-label="Time period" className="flex gap-2">
-        {PERIODS.map((period) => (
-          <button
-            key={period}
-            type="button"
-            onClick={() => setDays(period)}
-            aria-pressed={days === period}
-            className={`rounded-2xl px-4 py-1.5 font-semibold ${
-              days === period ? "bg-pink text-on-pink" : "bg-card hover:bg-card-soft"
-            }`}
-          >
-            {period} days
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center gap-2">
+        <div role="group" aria-label="Time period" className="flex gap-2">
+          {PERIODS.map((period) => (
+            <button
+              key={period}
+              type="button"
+              onClick={() => setDays(period)}
+              aria-pressed={days === period}
+              className={`rounded-2xl px-4 py-1.5 font-semibold ${
+                days === period ? "bg-pink text-on-pink" : "bg-card hover:bg-card-soft"
+              }`}
+            >
+              {period} days
+            </button>
+          ))}
+        </div>
+        <ExportButtons />
       </div>
 
       {range.isPending && <p className="text-ink-soft">Loading...</p>}
