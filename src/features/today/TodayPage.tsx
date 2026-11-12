@@ -81,8 +81,9 @@ export function TodayPage({ date, onChangeDate }: TodayPageProps) {
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div key={date} className="stagger grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <NumberCard
+          sticker="star"
           title="Steps"
           icon="/assets/person.png"
           unit="steps"
@@ -98,6 +99,7 @@ export function TodayPage({ date, onChangeDate }: TodayPageProps) {
           onSave={(water_ml) => save.mutate({ water_ml })}
         />
         <NumberCard
+          sticker="flower"
           title="Walk"
           icon="/assets/location.png"
           unit="min"
@@ -106,6 +108,7 @@ export function TodayPage({ date, onChangeDate }: TodayPageProps) {
           onSave={(walk_minutes) => save.mutate({ walk_minutes })}
         />
         <NumberCard
+          sticker="cloud"
           title="Weight"
           unit="kg"
           step={0.1}

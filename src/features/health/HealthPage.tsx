@@ -65,15 +65,16 @@ export function HealthPage() {
 
       {range.isSuccess && (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatTile label="Average steps" value={averageSteps?.toLocaleString() ?? "-"} detail={`on ${loggedSteps.length} logged days`} />
-            <StatTile label="Step goal reached" value={`${goalDays} days`} detail={`goal: ${stepGoal.toLocaleString()}`} />
+          <div className="stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <StatTile sticker="star" label="Average steps" value={averageSteps?.toLocaleString() ?? "-"} detail={`on ${loggedSteps.length} logged days`} />
+            <StatTile sticker="sparkle" label="Step goal reached" value={`${goalDays} days`} detail={`goal: ${stepGoal.toLocaleString()}`} />
             <StatTile
+              sticker="cloud"
               label="Weight change"
               value={weightChange === null ? "-" : `${weightChange > 0 ? "+" : ""}${weightChange.toFixed(1)} kg`}
               detail="first to last weigh-in"
             />
-            <StatTile label="Exercise days" value={`${exerciseDays} / ${days}`} />
+            <StatTile sticker="bat" label="Exercise days" value={`${exerciseDays} / ${days}`} />
           </div>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

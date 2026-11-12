@@ -31,3 +31,5 @@ private/
 
 jibon-guchao-backup-*
 jibon-guchao-daily-log-*
+# My personal character stickers: never commit these
+src/assets/my-stickers/

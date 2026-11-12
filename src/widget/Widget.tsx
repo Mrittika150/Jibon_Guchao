@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { Celebration, useGoalCelebration } from "../components/Celebration";
 import { ProgressBar } from "../components/ProgressBar";
+import { Sticker } from "../components/stickers/Sticker";
 import { useDailyLog, useSaveDailyLog, useSettings, useTodos, useUpdateTodo } from "../features/today/api";
 import { formatLongDate, todayISO } from "../lib/dates";
 import { setWidgetVisible } from "./widgetWindow";
@@ -32,6 +34,9 @@ export function Widget() {
   const openTodos = (todos.data ?? []).filter((todo) => !todo.done);
   const moreCount = openTodos.length - MAX_TODOS;
   const hasError = settings.isError || log.isError || todos.isError;
+  // null while loading, so opening the widget never counts as "reaching" a goal
+  const stepsCelebrating = useGoalCelebration(log.isSuccess ? steps : null, settings.data?.step_goal);
+  const waterCelebrating = useGoalCelebration(log.isSuccess ? water : null, settings.data?.water_goal_ml);
 
   return (
     <div className="flex h-screen flex-col gap-2 p-2.5 text-sm">
@@ -39,7 +44,8 @@ export function Widget() {
         data-tauri-drag-region
         className="flex cursor-move items-center justify-between gap-2 rounded-2xl bg-card px-3 py-1.5"
       >
-        <p data-tauri-drag-region className="font-bold">
+        <p data-tauri-drag-region className="flex items-center gap-1.5 font-bold">
+          <Sticker name="milk" className="sticker-wiggle h-6 w-6" />
           {formatLongDate(today)}
         </p>
         <button
@@ -60,7 +66,8 @@ export function Widget() {
       <div className="grid min-h-0 flex-1 grid-cols-2 gap-2">
         {/* Left column: steps on top, water below */}
         <div className="flex min-h-0 flex-col gap-2">
-          <section className="flex flex-1 flex-col justify-center gap-1.5 rounded-2xl bg-card p-3">
+          <section className="relative flex flex-1 flex-col justify-center gap-1.5 rounded-2xl bg-card p-3">
+            <Celebration show={stepsCelebrating} />
             <div className="flex items-baseline justify-between gap-2">
               <h2 className="font-bold">Steps</h2>
               <p>
@@ -68,10 +75,18 @@ export function Widget() {
                 <span className="text-xs text-ink-soft"> / {stepGoal.toLocaleString()}</span>
               </p>
             </div>
-            <ProgressBar value={steps} goal={stepGoal} label="Steps progress" />
+            <ProgressBar
+              value={steps}
+              goal={stepGoal}
+              label="Steps"
+              unit="steps"
+              step={100}
+              onChange={(value) => save.mutate({ steps: value })}
+            />
           </section>
 
-          <section className="flex flex-1 flex-col justify-center gap-1.5 rounded-2xl bg-card p-3">
+          <section className="relative flex flex-1 flex-col justify-center gap-1.5 rounded-2xl bg-card p-3">
+            <Celebration show={waterCelebrating} />
             <div className="flex items-baseline justify-between gap-2">
               <h2 className="font-bold">Water</h2>
               <p>
@@ -79,7 +94,14 @@ export function Widget() {
                 <span className="text-xs text-ink-soft"> / {waterGoal} ml</span>
               </p>
             </div>
-            <ProgressBar value={water} goal={waterGoal} label="Water progress" />
+            <ProgressBar
+              value={water}
+              goal={waterGoal}
+              label="Water"
+              unit="ml"
+              step={50}
+              onChange={(value) => save.mutate({ water_ml: value })}
+            />
             <button
               type="button"
               disabled={save.isPending}
@@ -92,9 +114,15 @@ export function Widget() {
         </div>
 
         {/* Right column: to-dos, full height */}
-        <section className="flex min-h-0 flex-col gap-1 rounded-2xl bg-card p-3">
+        <section className="relative flex min-h-0 flex-col gap-1 rounded-2xl bg-card p-3">
+          <Sticker name="bear" className="sticker-wiggle absolute -right-1 -bottom-1 h-10 w-10 -rotate-12" />
           <h2 className="font-bold">To-dos</h2>
-          {todos.isSuccess && openTodos.length === 0 && <p className="text-ink-soft">All done for today.</p>}
+          {todos.isSuccess && openTodos.length === 0 && (
+            <p className="flex items-center gap-2 text-ink-soft">
+              <Sticker name="bear" className="h-8 w-8" />
+              All done for today.
+            </p>
+          )}
           <ul className="flex flex-col gap-0.5 overflow-y-auto">
             {openTodos.slice(0, MAX_TODOS).map((todo) => (
               <li key={todo.id}>

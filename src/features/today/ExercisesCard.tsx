@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import { Card } from "../../components/Card";
+import { Sticker } from "../../components/stickers/Sticker";
 import { useAddExercise, useExerciseLogs, useExercises, useToggleExercise } from "./api";
 
 export function ExercisesCard({ date }: { date: string }) {
@@ -19,13 +20,16 @@ export function ExercisesCard({ date }: { date: string }) {
   }
 
   return (
-    <Card title="Exercise" icon="/assets/person.png">
+    <Card title="Exercise" icon="/assets/person.png" sticker="bat">
       {exercises.isPending && <p className="text-ink-soft">Loading...</p>}
       {exercises.data?.length === 0 && (
-        <p className="text-ink-soft">No exercises yet. Add your first one below.</p>
+        <p className="flex items-center gap-2 text-ink-soft">
+          <Sticker name="mocha" className="h-8 w-8" />
+          No exercises yet. Add your first one below.
+        </p>
       )}
 
-      <ul className="flex flex-col gap-1">
+      <ul className="-mr-2 flex max-h-24 flex-col gap-1 overflow-y-auto pr-2">
         {exercises.data?.map((exercise) => {
           const done = doneIds.has(exercise.id);
           return (
@@ -45,7 +49,7 @@ export function ExercisesCard({ date }: { date: string }) {
         })}
       </ul>
 
-      <form onSubmit={handleAdd} className="flex gap-2">
+      <form onSubmit={handleAdd} className="mt-auto flex gap-2">
         <input
           name="name"
           maxLength={100}

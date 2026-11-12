@@ -11,6 +11,7 @@
     --line: #f9cfe0;
     --icon-filter: none;
     --chart: #c2477e;
+    --dot: #fcd9e8;
 }
 
 [data-theme="dark"]{
@@ -24,6 +25,7 @@
     --line: #3d3154;
     --icon-filter: brightness(1.6);
     --chart: #e0609f;
+    --dot: #2f2643;
 
 }
 
@@ -43,7 +45,10 @@
 
 body{
     margin:0;
-    background: var(--page);
+    background-color: var(--page);
+    /* soft polka dots */
+    background-image: radial-gradient(var(--dot) 1.5px, transparent 1.8px);
+    background-size: 22px 22px;
     color:var(--ink);
     font-family: var(--font-sans);
 }
@@ -52,3 +57,80 @@ body{
 .icon {
   filter: var(--icon-filter);
 }
+
+/* ---------- Stickers ---------- */
+.sticker {
+  display: inline-block;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 2px rgb(74 44 58 / 0.18));
+}
+.sticker-wiggle:hover {
+  animation: wiggle 0.6s ease-in-out;
+}
+.sticker-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ---------- Animations ---------- */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+}
+@keyframes wiggle {
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+@keyframes float {
+  50% { transform: translateY(-4px); }
+}
+@keyframes burst {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--spin));
+  }
+}
+
+/* Cards gently pop in, one after another */
+.pop-in {
+  animation: pop-in 0.35s ease-out backwards;
+}
+.stagger > :nth-child(2) { animation-delay: 40ms; }
+.stagger > :nth-child(3) { animation-delay: 80ms; }
+.stagger > :nth-child(4) { animation-delay: 120ms; }
+.stagger > :nth-child(5) { animation-delay: 160ms; }
+.stagger > :nth-child(6) { animation-delay: 200ms; }
+
+.burst {
+  animation: burst 0.9s ease-out forwards;
+}
+
+/* Buttons squish a little when pressed */
+@layer base {
+  button {
+    transition: transform 0.12s ease;
+  }
+  button:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+}
+
+/* Respect Windows' "reduce motion" setting: no movement at all */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .burst {
+    display: none;
+  }
+}
+
