@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Sticker } from "../components/stickers/Sticker";
 import { supabase } from "../lib/supabase";
 
 export function LoginScreen() {
@@ -24,9 +25,14 @@ export function LoginScreen() {
     <div className="flex h-screen items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
-        className="flex w-full max-w-sm flex-col gap-4 rounded-3xl border border-line bg-card p-8 shadow-sm"
+        className="pop-in relative flex w-full max-w-sm flex-col gap-4 rounded-3xl border border-line bg-card p-8 shadow-sm"
       >
-        <h1 className="text-2xl font-bold">Jibon Guchao</h1>
+        <div className="absolute -top-12 left-1/2 flex -translate-x-1/2 items-end">
+          <Sticker name="milk" className="sticker-float h-16 w-16 -rotate-12" />
+          <Sticker name="bear" className="h-20 w-20" />
+          <Sticker name="mocha" className="sticker-float h-16 w-16 rotate-12" />
+        </div>
+        <h1 className="mt-6 text-2xl font-bold">Jibon Guchao</h1>
         <p className="text-ink-soft">Sign in to see your day.</p>
 
         <label className="flex flex-col gap-1 font-semibold">

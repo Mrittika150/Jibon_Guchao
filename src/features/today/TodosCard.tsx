@@ -1,6 +1,19 @@
 import type { FormEvent } from "react";
 import { Card } from "../../components/Card";
+import { Sticker } from "../../components/stickers/Sticker";
 import { useAddTodo, useDeleteTodo, useTodos, useUpdateTodo } from "./api";
+
+// A small bin icon. "currentColor" means it uses the button's text colour, so it fits both themes.
+function TrashIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 7h16" />
+      <path d="M9 7V4.5h6V7" />
+      <path d="M6 7l1 12.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5L18 7" />
+      <path d="M10 11v6M14 11v6" />
+    </svg>
+  );
+}
 
 export function TodosCard({ date }: { date: string }) {
   const todos = useTodos(date);
@@ -17,21 +30,27 @@ export function TodosCard({ date }: { date: string }) {
   }
 
   return (
-    <Card title="To-dos" icon="/assets/to-do-list.png">
+    <Card title="To-dos" icon="/assets/to-do-list.png" sticker="bow">
       {todos.isPending && <p className="text-ink-soft">Loading...</p>}
-      {todos.data?.length === 0 && <p className="text-ink-soft">Nothing to do. Enjoy your day.</p>}
+      {todos.data?.length === 0 && (
+        <p className="flex items-center gap-2 text-ink-soft">
+          <Sticker name="bear" className="h-8 w-8" />
+          Nothing to do. Enjoy your day.
+        </p>
+      )}
 
-      <ul className="flex flex-col gap-1">
+      {/* The list scrolls inside the card instead of making the card taller */}
+      <ul className="-mr-2 flex max-h-24 flex-col gap-1 overflow-y-auto pr-2">
         {todos.data?.map((todo) => (
-          <li key={todo.id} className="flex items-center gap-3 rounded-2xl px-2 py-1 hover:bg-card-soft">
+          <li key={todo.id} className="flex items-center gap-2 rounded-2xl px-2 py-1 hover:bg-card-soft">
             <input
               type="checkbox"
               checked={todo.done}
               onChange={() => updateTodo.mutate({ id: todo.id, done: !todo.done })}
               aria-label={`Mark "${todo.title}" as done`}
-              className="h-5 w-5 accent-pink"
+              className="h-5 w-5 shrink-0 accent-pink"
             />
-            <span className={`flex-1 ${todo.done ? "text-ink-soft line-through" : ""}`}>
+            <span className={`min-w-0 flex-1 break-words ${todo.done ? "text-ink-soft line-through" : ""}`}>
               {todo.title}
               {todo.due_date !== null && todo.due_date < date && (
                 <span className="ml-2 text-xs font-semibold text-ink-soft">(from {todo.due_date})</span>
@@ -41,15 +60,16 @@ export function TodosCard({ date }: { date: string }) {
               type="button"
               onClick={() => deleteTodo.mutate(todo.id)}
               aria-label={`Delete "${todo.title}"`}
-              className="rounded-xl px-2 text-ink-soft hover:text-ink"
+              title="Delete"
+              className="shrink-0 rounded-xl p-1.5 text-ink-soft hover:bg-card hover:text-ink"
             >
-              Delete
+              <TrashIcon />
             </button>
           </li>
         ))}
       </ul>
 
-      <form onSubmit={handleAdd} className="flex gap-2">
+      <form onSubmit={handleAdd} className="mt-auto flex gap-2">
         <input
           name="title"
           maxLength={200}

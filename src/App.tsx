@@ -5,6 +5,7 @@ import { useSession } from "./auth/useSession";
 import { LoginScreen } from "./auth/LoginScreen";
 import { TodayPage } from "./features/today/TodayPage";
 import { todayISO } from "./lib/dates";
+import { Sticker } from "./components/stickers/Sticker";
 import { CalendarPage } from "./features/calendar/CalendarPage";
 import { HealthPage } from "./features/health/HealthPage";
 
@@ -63,6 +64,7 @@ function App() {
        <h2 className="flex items-center gap-3 text-2xl font-bold">
         <img src={screen.icon} alt="" className="icon h-8 w-8" />
         {screen.label}
+        <Sticker name={screen.sticker} className="sticker-float h-11 w-11" />
       </h2>
                 <div className="mt-4">
          <ScreenContent id={current} day={day ?? todayISO()} onOpenDay={openDay} />

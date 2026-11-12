@@ -1,5 +1,6 @@
 import { SCREENS, type ScreenId } from "./screens";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { Sticker } from "../components/stickers/Sticker";
 import { supabase } from "../lib/supabase";
 import { toggleWidget } from "../widget/widgetWindow";
 
@@ -11,7 +12,10 @@ type SidebarProps = {
 export function Sidebar({ current, onSelect }: SidebarProps) {
   return (
     <nav className="flex w-56 shrink-0 flex-col gap-1 border-r border-line bg-card p-4">
-      <h1 className="mb-4 px-3 text-xl font-bold">Jibon Guchao </h1>
+      <h1 className="mb-4 flex items-center gap-2 px-2 text-xl font-bold">
+        <Sticker name="milk" className="sticker-wiggle h-9 w-9" />
+        Jibon Guchao
+      </h1>
 
       {SCREENS.map((screen) => {
         const isActive = screen.id === current;
