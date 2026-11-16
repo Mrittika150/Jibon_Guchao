@@ -9,6 +9,7 @@ import { Sticker } from "./components/stickers/Sticker";
 import { CalendarPage } from "./features/calendar/CalendarPage";
 import { HealthPage } from "./features/health/HealthPage";
 import { ExpensesPage } from "./features/expenses/ExpensesPage";
+import { JournalPage } from "./features/journal/JournalPage";
 
 type ScreenContentProps = {
   id: ScreenId;
@@ -26,6 +27,8 @@ function ScreenContent({ id, day, onOpenDay }: ScreenContentProps) {
       return <HealthPage />;
     case "expenses":
       return <ExpensesPage />;
+    case "journal":
+      return <JournalPage />;
     default:
       return (
         <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">

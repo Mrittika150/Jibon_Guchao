@@ -16,6 +16,7 @@ const TABLES = [
   { name: "exercise_logs", orderBy: "id" },
   { name: "todos", orderBy: "id" },
   { name: "expenses", orderBy: "id" },
+  { name: "journal_entries", orderBy: "id" },
 ] as const;
 
 const PAGE_SIZE = 1000;
