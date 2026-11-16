@@ -8,6 +8,7 @@ import { todayISO } from "./lib/dates";
 import { Sticker } from "./components/stickers/Sticker";
 import { CalendarPage } from "./features/calendar/CalendarPage";
 import { HealthPage } from "./features/health/HealthPage";
+import { ExpensesPage } from "./features/expenses/ExpensesPage";
 
 type ScreenContentProps = {
   id: ScreenId;
@@ -23,6 +24,8 @@ function ScreenContent({ id, day, onOpenDay }: ScreenContentProps) {
       return <CalendarPage onOpenDay={onOpenDay} />;
     case "health":
       return <HealthPage />;
+    case "expenses":
+      return <ExpensesPage />;
     default:
       return (
         <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">

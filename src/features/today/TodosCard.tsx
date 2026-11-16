@@ -2,6 +2,7 @@ import type { FormEvent } from "react";
 import { Card } from "../../components/Card";
 import { Sticker } from "../../components/stickers/Sticker";
 import { useAddTodo, useDeleteTodo, useTodos, useUpdateTodo } from "./api";
+import { TrashIcon } from "../../components/icons/TrashIcon";
 
 // A small bin icon. "currentColor" means it uses the button's text colour, so it fits both themes.
 function TrashIcon() {
