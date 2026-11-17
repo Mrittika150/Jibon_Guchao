@@ -4,6 +4,7 @@ import { NumberCard } from "./NumberCard";
 import { WaterCard } from "./WaterCard";
 import { ExercisesCard } from "./ExercisesCard";
 import { TodosCard } from "./TodosCard";
+import { StudyPill } from "../skills/StudyPill";
 
 type TodayPageProps = {
   date: string;
@@ -60,7 +61,8 @@ export function TodayPage({ date, onChangeDate }: TodayPageProps) {
             Back to today
           </button>
         )}
-        <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-2xl bg-card px-3 py-1.5 font-semibold">
+        <StudyPill date={date} />
+        <label className="flex cursor-pointer items-center gap-2 rounded-2xl bg-card px-3 py-1.5 font-semibold">
           <input
             type="checkbox"
             checked={isFastDay}

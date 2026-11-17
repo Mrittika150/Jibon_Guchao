@@ -2,6 +2,7 @@ import { useState } from "react";
 import { formatLongDate, formatMonth, monthGrid, toISODate, todayISO, weekdayOf } from "../../lib/dates";
 import { groupByDate, useRangeData } from "../../lib/rangeData";
 import { useSettings } from "../today/api";
+import { formatMinutes } from "../skills/studyTime";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -22,6 +23,8 @@ export function CalendarPage({ onOpenDay }: CalendarPageProps) {
   const logsByDate = groupByDate(range.data?.logs ?? [], (log) => log.log_date);
   const exercisesByDate = groupByDate(range.data?.exerciseLogs ?? [], (log) => log.log_date);
   const todosByDate = groupByDate(range.data?.todos ?? [], (todo) => todo.due_date);
+  const studyByDate = groupByDate(range.data?.practiceLogs ?? [], (log) => log.log_date);
+  const deadlinesByDate = groupByDate(range.data?.deadlines ?? [], (deadline) => deadline.due_date);
   const stepGoal = settings.data?.step_goal ?? 10000;
   const daysOff = settings.data?.days_off ?? [];
 
@@ -46,6 +49,8 @@ export function CalendarPage({ onOpenDay }: CalendarPageProps) {
   const selectedLog = logsByDate.get(selected)?.[0];
   const selectedTodos = todosByDate.get(selected) ?? [];
   const selectedExercises = exercisesByDate.get(selected)?.length ?? 0;
+  const selectedStudy = (studyByDate.get(selected) ?? []).reduce((sum, log) => sum + log.minutes, 0);
+  const selectedDeadlines = deadlinesByDate.get(selected) ?? [];
 
   return (
     <div className="flex flex-col gap-4">
@@ -112,12 +117,15 @@ export function CalendarPage({ onOpenDay }: CalendarPageProps) {
                     </span>
                   )}
                   {log?.is_fast_day && <span className="h-1.5 w-6 rounded-full bg-pink" />}
+                  {(deadlinesByDate.get(date) ?? []).some((deadline) => !deadline.done) && (
+                    <span className="rounded-full border border-pink px-1.5 text-[10px] leading-4 font-semibold">Due</span>
+                  )}
                 </button>
               );
             })}
           </div>
           <p className="mt-2 px-1.5 text-xs text-ink-soft">
-            Steps in thousands, bold = goal reached. Pink line = fast day. Shaded = day off.
+            Steps in thousands, bold = goal reached. Pink line = fast day. Due = a deadline. Shaded = day off.
           </p>
         </div>
 
@@ -140,6 +148,12 @@ export function CalendarPage({ onOpenDay }: CalendarPageProps) {
             </dd>
             <dt className="text-ink-soft">Fast day</dt>
             <dd className="text-right font-semibold">{selectedLog?.is_fast_day ? "Yes" : "No"}</dd>
+            <dt className="text-ink-soft">Study</dt>
+            <dd className="text-right font-semibold">{formatMinutes(selectedStudy)}</dd>
+            <dt className="text-ink-soft">Due</dt>
+            <dd className="text-right font-semibold">
+              {selectedDeadlines.length === 0 ? "-" : selectedDeadlines.map((deadline) => deadline.title).join(", ")}
+            </dd>
           </dl>
           <button
             type="button"

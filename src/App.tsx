@@ -11,6 +11,7 @@ import { HealthPage } from "./features/health/HealthPage";
 import { ExpensesPage } from "./features/expenses/ExpensesPage";
 import { JournalPage } from "./features/journal/JournalPage";
 import { FoodPage } from "./features/food/FoodPage";
+import { SkillsPage } from "./features/skills/SkillsPage";
 
 type ScreenContentProps = {
   id: ScreenId;
@@ -32,6 +33,8 @@ function ScreenContent({ id, day, onOpenDay }: ScreenContentProps) {
       return <ExpensesPage />;
     case "journal":
       return <JournalPage />;
+    case "skills":
+      return <SkillsPage />;
     default:
       return (
         <div className="rounded-3xl border border-line bg-card p-6 shadow-sm">

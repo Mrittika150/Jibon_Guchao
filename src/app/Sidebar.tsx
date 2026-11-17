@@ -12,7 +12,7 @@ type SidebarProps = {
 export function Sidebar({ current, onSelect }: SidebarProps) {
   return (
     <nav className="flex w-56 shrink-0 flex-col gap-1 border-r border-line bg-card p-4">
-      <h1 className="mb-4 flex items-center gap-2 px-2 text-xl font-bold">
+      <h1 className="mb-4 flex items-center gap-1.5 px-1 text-xl font-bold whitespace-nowrap">
         <Sticker name="milk" className="sticker-wiggle h-9 w-9" />
         Jibon Guchao
       </h1>
