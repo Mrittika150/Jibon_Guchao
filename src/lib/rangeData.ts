@@ -6,6 +6,8 @@ export type RangeData = {
   logs: DailyLog[];
   exerciseLogs: ExerciseLog[];
   todos: Todo[];
+  practiceLogs: { log_date: string; minutes: number }[];
+  deadlines: { id: string; title: string; due_date: string; done: boolean }[];
 };
 
 // Everything saved between two dates (both included), in one go.
@@ -13,7 +15,7 @@ export function useRangeData(from: string, to: string) {
   return useQuery({
     queryKey: ["range", from, to],
     queryFn: async (): Promise<RangeData> => {
-      const [logs, exerciseLogs, todos] = await Promise.all([
+      const [logs, exerciseLogs, todos, practiceLogs, deadlines] = await Promise.all([
         supabase.from("daily_logs").select("*").gte("log_date", from).lte("log_date", to),
         supabase
           .from("exercise_logs")
@@ -25,15 +27,19 @@ export function useRangeData(from: string, to: string) {
           .select("id, title, due_date, done")
           .gte("due_date", from)
           .lte("due_date", to),
+        supabase.from("practice_logs").select("log_date, minutes").gte("log_date", from).lte("log_date", to),
+        supabase.from("deadlines").select("id, title, due_date, done").gte("due_date", from).lte("due_date", to),
       ]);
 
-      const error = logs.error ?? exerciseLogs.error ?? todos.error;
+      const error = logs.error ?? exerciseLogs.error ?? todos.error ?? practiceLogs.error ?? deadlines.error;
       if (error) throw error;
 
       return {
         logs: logs.data ?? [],
         exerciseLogs: exerciseLogs.data ?? [],
         todos: todos.data ?? [],
+        practiceLogs: practiceLogs.data ?? [],
+        deadlines: deadlines.data ?? [],
       };
     },
   });
