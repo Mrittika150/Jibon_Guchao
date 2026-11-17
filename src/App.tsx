@@ -10,6 +10,7 @@ import { CalendarPage } from "./features/calendar/CalendarPage";
 import { HealthPage } from "./features/health/HealthPage";
 import { ExpensesPage } from "./features/expenses/ExpensesPage";
 import { JournalPage } from "./features/journal/JournalPage";
+import { FoodPage } from "./features/food/FoodPage";
 
 type ScreenContentProps = {
   id: ScreenId;
@@ -25,6 +26,8 @@ function ScreenContent({ id, day, onOpenDay }: ScreenContentProps) {
       return <CalendarPage onOpenDay={onOpenDay} />;
     case "health":
       return <HealthPage />;
+    case "food":
+      return <FoodPage />;
     case "expenses":
       return <ExpensesPage />;
     case "journal":
