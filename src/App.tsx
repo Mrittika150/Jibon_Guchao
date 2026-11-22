@@ -12,6 +12,8 @@ import { ExpensesPage } from "./features/expenses/ExpensesPage";
 import { JournalPage } from "./features/journal/JournalPage";
 import { FoodPage } from "./features/food/FoodPage";
 import { SkillsPage } from "./features/skills/SkillsPage";
+import { Reminders } from "./app/Reminders";
+import { notify } from "./lib/notify";
 
 type ScreenContentProps = {
   id: ScreenId;
@@ -43,12 +45,14 @@ function ScreenContent({ id, day, onOpenDay }: ScreenContentProps) {
       );
   }
 }
+const REMINDERS_KEY = "jibon-guchao-reminders";
 
 function App() {
   const [current, setCurrent] = useState<ScreenId>("today");
   // null means "whatever today is", so it stays right after midnight
   const [day, setDay] = useState<string | null>(null);
-  const screen = SCREENS.find((s) => s.id === current) ?? SCREENS[0];
+  const [remindersOn, setRemindersOn] = useState(() => localStorage.getItem(REMINDERS_KEY) === "on");
+  const screen =SCREENS.find((s) => s.id === current) ?? SCREENS[0];
     const session = useSession();
 
   if (session === undefined) {
@@ -63,6 +67,22 @@ function App() {
     setCurrent("today");
   }
 
+  async function toggleReminders() {
+    if (remindersOn) {
+      setRemindersOn(false);
+      localStorage.setItem(REMINDERS_KEY, "off");
+      return;
+    }
+    // Turning on: ask Windows for permission, and show a first notification as a test
+    const allowed = await notify("Reminders are on", "Gentle nudges for meals, water and deadlines.");
+    if (allowed) {
+      setRemindersOn(true);
+      localStorage.setItem(REMINDERS_KEY, "on");
+    } else {
+      window.alert("Notifications are blocked. Allow them in Windows Settings > System > Notifications.");
+    }
+  }
+
   function selectScreen(id: ScreenId) {
     if (id === "today") setDay(null); // the sidebar's Today always means today
     setCurrent(id);
@@ -70,7 +90,8 @@ function App() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar current={current} onSelect={selectScreen} />
+      <Sidebar current={current} onSelect={selectScreen} remindersOn={remindersOn} onToggleReminders={toggleReminders} />
+      <Reminders enabled={remindersOn} />
 
       <main className="flex-1 overflow-y-auto p-6">
        <h2 className="flex items-center gap-3 text-2xl font-bold">

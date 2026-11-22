@@ -33,4 +33,6 @@ export type Settings = {
   water_goal_ml: number;
   fast_days: number[];
   days_off: number[];
+  work_start: string; // "09:00:00"
+  work_end: string;
 };
