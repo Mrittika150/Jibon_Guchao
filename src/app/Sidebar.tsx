@@ -7,9 +7,11 @@ import { toggleWidget } from "../widget/widgetWindow";
 type SidebarProps = {
   current: ScreenId;
   onSelect: (id: ScreenId) => void;
+  remindersOn: boolean;
+  onToggleReminders: () => void;
 };
 
-export function Sidebar({ current, onSelect }: SidebarProps) {
+export function Sidebar({ current, onSelect, remindersOn, onToggleReminders }: SidebarProps) {
   return (
     <nav className="flex w-56 shrink-0 flex-col gap-1 border-r border-line bg-card p-4">
       <h1 className="mb-4 flex items-center gap-1.5 px-1 text-xl font-bold whitespace-nowrap">
@@ -37,8 +39,16 @@ export function Sidebar({ current, onSelect }: SidebarProps) {
         );
       })}
 
-     <div className="mt-auto flex flex-col gap-2">
-              <button
+      <div className="mt-auto flex flex-col gap-2">
+        <button
+          type="button"
+          aria-pressed={remindersOn}
+          onClick={onToggleReminders}
+          className="rounded-2xl px-3 py-2 font-semibold text-ink-soft transition-colors hover:bg-card-soft hover:text-ink"
+        >
+          Reminders: {remindersOn ? "On" : "Off"}
+        </button>
+        <button
           type="button"
           onClick={() => toggleWidget()}
           className="rounded-2xl px-3 py-2 font-semibold text-ink-soft transition-colors hover:bg-card-soft hover:text-ink"

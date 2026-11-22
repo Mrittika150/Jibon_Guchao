@@ -8,7 +8,9 @@ const DEFAULT_SETTINGS: Settings = {
   step_goal: 10000,
   water_goal_ml: 2000,
   fast_days: [],
-  days_off: [],
+  days_off: [5, 6],
+  work_start: "09:00:00",
+  work_end: "17:00:00",
 };
 
 export function useSettings() {
@@ -17,7 +19,7 @@ export function useSettings() {
     queryFn: async (): Promise<Settings> => {
       const { data, error } = await supabase
         .from("user_settings")
-        .select("step_goal, water_goal_ml, fast_days, days_off")
+        .select("step_goal, water_goal_ml, fast_days, days_off, work_start, work_end")
         .maybeSingle();
       if (error) throw error;
       return data ?? DEFAULT_SETTINGS;

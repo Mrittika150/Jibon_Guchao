@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "jibon-guchao",
-  "version": "0.1.0",
+  "productName": "Jibon Guchao",
+  "version": "1.0.0",
   "identifier": "com.jibon-guchao.app",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -10,7 +10,7 @@
     "frontendDist": "../dist"
   },
   "app": {
-        "windows": [
+    "windows": [
       {
         "label": "main",
         "title": "Jibon Guchao",
@@ -35,7 +35,9 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": [
+      "nsis"
+    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
